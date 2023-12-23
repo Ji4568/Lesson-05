@@ -17,3 +17,38 @@
 #一樣，我們先讀檔進來
 dat = read.csv("data4_1.csv", header = TRUE, fileEncoding = 'CP950') 
 head(dat)
+
+#驗證規則設定-1(3)
+#首先第一步，我們先檢查日期格式，在R裡面剛讀進來的檔案中，日期的格式通常最開始被設定為「因子向量」，這時候是很難檢查的。比較簡單的做法是直接將這個變項轉變為「日期向量」，它需要用到函數「as.Date()」：
+class(dat[,"Date"])
+
+dat$Date = as.Date(dat[,"Date"])
+#這個步驟可以確保所有內容都成為「日期格式」，如果有非正確的日期，這時候R就會提出警告，詳見下列範例：
+test.date = c("2011/01/05", "2011/09/31", "2011/02/29", "2016/02/29")
+test.date = as.Date(test.date)
+test.date
+
+#因此，在轉換完成後，我們只要確定轉換後的值是否有產生missing value就可以了，我們可以使用函數「is.na()」：
+dat$Wrong.Date = is.na(dat$Date)
+#所以，現在日期格式錯誤的被紀錄起來了，我們可以透過索引函數叫出錯誤的列讓我們看看
+dat[dat$Wrong.Date == TRUE,]
+##  [1] Patient       Date          MDRD.GFR      Stage         WBC          
+##  [6] RBC           HB            Hct           MCV           Urea.Nitrogen
+## [11] Creatinine    Uric.Acid     Na            K             Albumin      
+## [16] Wrong.Date   
+## <0 列> (或零長度的 row.names)
+#在這筆資料中，沒有錯誤的日期格式。（同學可以試試看隨便把原始檔中某一天的日期改成錯誤的，再用同樣的程式碼看看會不會抓到）
+#我們稍微整理一下規則1的程式碼，老師會把這串程式碼整理成這樣
+
+dat = read.csv("data4_1.csv", header = TRUE, fileEncoding = 'CP950') 
+
+#Rule 1: check date-format
+dat$Date = as.Date(dat[,"Date"])
+dat$Wrong.Date = is.na(dat$Date)
+#dat[dat$Wrong.Date == TRUE,]
+
+#Rule 2: ...
+
+
+
+
