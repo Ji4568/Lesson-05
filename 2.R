@@ -46,4 +46,37 @@ if (n.date>1) {
 dif
 ## Time differences in days
 
+#驗證規則設定-2(4)
+#下一步，我們想要了解有沒有間隔<3個月的，一個比較簡單的想法是檢查差異是否小於90天，並把結果儲存成一個邏輯向量
+i = 1
+subdat = dat[dat$Patient==levels.Patient[i],]
+n.date = length(subdat$Date)
+if (n.date>1) {
+  dif = diff(subdat$Date)
+  check = dif < 90
+}
+check
+
+#只要裡面有TRUE就中獎了，還記得函數「%in%」嗎?左邊的東西只要右邊有出現就會給TRUE：
+i = 1
+subdat = dat[dat$Patient==levels.Patient[i],]
+n.date = length(subdat$Date)
+if (n.date>1) {
+  dif = diff(subdat$Date)
+  check = dif < 90
+}
+TRUE %in% check
+
+#現在，我們能將這個結果儲存在物件「x」內了
+i = 1
+subdat = dat[dat$Patient==levels.Patient[i],]
+n.date = length(subdat$Date)
+if (n.date>1) {
+  dif = diff(subdat$Date)
+  check = dif < 90
+  x[i] = TRUE %in% check
+} else {
+  x[i] = FALSE
+}
+
 
