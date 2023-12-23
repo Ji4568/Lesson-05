@@ -22,3 +22,28 @@ i = 1
 subdat = dat[dat$Patient==levels.Patient[i],]
 subdat
 
+#驗證規則設定-2(3)
+#接著，我們要比對日期了，我們可以先排序日期後，再透過後減前計算差距，並把結果儲存成另外一個向量(這裡也可以再做個迴圈)
+#如果個案僅申報一筆資料就不用繼續了，所以必須加入條件判斷
+
+i = 1
+subdat = dat[dat$Patient==levels.Patient[i],]
+n.date = length(subdat$Date)
+if (n.date>1) {
+  dif = rep(NA, n.date-1)
+  for (k in 1:(n.date-1)) {
+    dif[k] = subdat$Date[k+1] - subdat$Date[k]
+  }
+}
+dif
+#上述這斷程式碼其實可以透過函數「diff()」獲得同樣的結果，但同學必須了解，即使我們不知道有這個函數，還是能透過迴圈暴力完成他
+i = 1
+subdat = dat[dat$Patient==levels.Patient[i],]
+n.date = length(subdat$Date)
+if (n.date>1) {
+  dif = diff(subdat$Date)
+}
+dif
+## Time differences in days
+
+
