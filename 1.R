@@ -55,5 +55,14 @@ dat$Wrong.Date = is.na(dat$Date)
 #下面是精簡的程式碼，函數「!」可以把所有TRUE與FALSE互相調換，所以Wrong.Stage為TRUE的就變成是「不屬於1至5的」
 dat$Wrong.Stage = !dat$Stage %in% 1:5
 
+#驗證規則設定-1(5)
+#連續變項的值比較困難一點，我們可以透過簡單的設定區間找出看起來異常的值，如GFR低於0或高於150的我們可以將它找出來
+#索引函數可以幫助我們設定規則，???得注意的是，未來如果我們想要將連續變項『血壓???』轉換為類別變項『高血壓』時，可以透過類似的方式。
 
+dat$Wrong.GFR[dat$MDRD.GFR>150 | dat$MDRD.GFR<0] = TRUE
+dat$Wrong.GFR[dat$MDRD.GFR<=150 & dat$MDRD.GFR>=0] = FALSE
+#我們使用同樣的方法列出所有奇怪的值，發現奇怪的地方在哪了嗎?
+dat[dat$Wrong.GFR == TRUE, c("Patient", "Date", "MDRD.GFR", "Stage", "Wrong.GFR")]
 
+#由於MDRD.GFR有一些人是missing的，所以說我們在顯示時不能呈現NA???，可以透過這樣的方式
+dat[dat$Wrong.GFR == TRUE & !is.na(dat$Wrong.GFR), c("Patient", "Date", "MDRD.GFR", "Stage", "Wrong.GFR")]
