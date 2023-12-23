@@ -13,3 +13,22 @@ dat[dat$Patient==levels.Patient[i],c("Patient", "Date", "Wrong.Date_interval")]
 i = 123
 dat[dat$Patient==levels.Patient[i],"Wrong.Date_interval"][1] = FALSE
 dat[dat$Patient==levels.Patient[i],c("Patient", "Date", "Wrong.Date_interval")]
+
+#驗證規則設定-3(2)
+#透過迴圈，我們能夠從第二筆開始檢查他是否間格不夠。
+#值得注意的是，這位病患在『2007-06-26』、『2007-07-23』、『2007-09-26』這三天分別被申報，其間格分別是27與65，雖然『2007-07-23』必須被核刪，但考慮到刪除這天後，『2007-09-26』與『2007-06-26』就相距92天，這是一個可以接受的日期，所以我們必須想一下，該怎麼解決這件事。
+#我們可以在迴圈進行時，找尋『Wrong.Date_interval』為FALSE的最後一筆出來，之後並以他為標記做相減
+#記得避免遺漏值！
+
+i = 123
+dat[dat$Patient==levels.Patient[i],"Wrong.Date_interval"][1] = FALSE
+n.date = length(dat[dat$Patient==levels.Patient[i],"Date"])
+
+k = 2
+false.dates = dat[dat$Patient==levels.Patient[i] & dat$Wrong.Date_interval == FALSE & !is.na(dat$Wrong.Date_interval),"Date"]
+last.date = false.dates[length(false.dates)]
+dif = dat[dat$Patient==levels.Patient[i],"Date"][k] - last.date
+dat[dat$Patient==levels.Patient[i],"Wrong.Date_interval"][k] = dif < 90
+
+dat[dat$Patient==levels.Patient[i],c("Patient", "Date", "Wrong.Date_interval")]
+
