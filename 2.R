@@ -79,4 +79,27 @@ if (n.date>1) {
   x[i] = FALSE
 }
 
+#驗證規則設定-2(5)
+#我們可以將這些組合成一個迴圈了，並且把物件「x」整個填滿，完整函數如下
+levels.Patient = levels(as.factor(dat$Patient))
+n.Patient = length(levels.Patient)
+x = rep(NA, n.Patient)
+
+for (i in 1:n.Patient) {
+  subdat = dat[dat$Patient==levels.Patient[i],]
+  n.date = length(subdat$Date)
+  if (n.date>1) {
+    dif = diff(subdat$Date)
+    check = dif < 90
+    x[i] = TRUE %in% check
+  } else {
+    x[i] = FALSE
+  }
+}
+
+x
+#接著，透過索引函數我們就能找出有哪些人有出現間格過短的情形
+levels.Patient[x]
+#最後，增加一個變數，並透過函數「%in%」一口氣把這些人標示出來：
+dat$Wrong.Date_interval = dat$Patient %in% levels.Patient[x]
 
