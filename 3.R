@@ -32,3 +32,28 @@ dat[dat$Patient==levels.Patient[i],"Wrong.Date_interval"][k] = dif < 90
 
 dat[dat$Patient==levels.Patient[i],c("Patient", "Date", "Wrong.Date_interval")]
 
+#驗證規則設定-3(3)
+#接著我們只要將i以及k打包成迴圈就完成了
+#需要注意的是，如果n.date>1才需要做後續檢查
+
+levels.Patient = levels(as.factor(dat$Patient))
+n.Patient = length(levels.Patient)
+dat$Wrong.Date_interval = NA
+
+pb = txtProgressBar(max = n.Patient, style=3)
+
+for (i in 1:n.Patient) {
+  dat[dat$Patient==levels.Patient[i],"Wrong.Date_interval"][1] = FALSE
+  n.date = length(dat[dat$Patient==levels.Patient[i],"Date"])
+  if (n.date>1) {
+    for (k in 2:n.date) {
+      false.dates = dat[dat$Patient==levels.Patient[i] & dat$Wrong.Date_interval == FALSE & !is.na(dat$Wrong.Date_interval),"Date"]
+      last.date = false.dates[length(false.dates)]
+      dif = dat[dat$Patient==levels.Patient[i],"Date"][k] - last.date
+      dat[dat$Patient==levels.Patient[i],"Wrong.Date_interval"][k] = dif < 90
+    }
+  }
+  setTxtProgressBar(pb, i)
+}
+
+close(pb)
